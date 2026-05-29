@@ -8,22 +8,71 @@
 
 /* ─── Theme tokens ─────────────────────────────────────── */
 :root {
-  --color-bg: #FFFFFF;
-  --color-bg-deep: #F1F5F9;
-  --color-bg-header: rgba(255,255,255,0.92);
-  --color-surface: rgba(0,0,0,0.04);
-  --color-surface-border: rgba(0,0,0,0.10);
-  --color-ink: #0F172A;
-  --color-ink-muted: #64748B;
+  /* Surfaces */
+  --color-bg:            #F4F6FB;
+  --color-bg-deep:       #E8EDF7;
+  --color-bg-header:     rgba(244,246,251,0.94);
+  --color-surface:       rgba(59,130,246,0.05);
+  --color-surface-border:rgba(15,25,80,0.11);
+  /* Text */
+  --color-ink:           #0D1B3E;
+  --color-ink-muted:     #4A5C82;
+  /* Shadows */
+  --shadow-card-hover:   0 0 20px rgba(59,130,246,0.10), 0 6px 20px rgba(13,27,62,0.12);
+  /* Component tokens — chips */
+  --chip-good-color:     #15803D;
+  --chip-good-bg:        rgba(34,197,94,0.10);
+  --chip-good-border:    rgba(34,197,94,0.28);
+  --chip-warn-color:     #92400E;
+  --chip-warn-bg:        rgba(251,191,36,0.10);
+  --chip-warn-border:    rgba(251,191,36,0.30);
+  --chip-note-color:     #1D4ED8;
+  --chip-note-bg:        rgba(59,130,246,0.08);
+  --chip-note-border:    rgba(59,130,246,0.25);
+  --chip-neutral-color:  #475569;
+  --chip-neutral-bg:     rgba(0,0,0,0.05);
+  --chip-neutral-border: rgba(0,0,0,0.12);
+  /* Component tokens — offer block */
+  --offer-label-color:   #16A34A;
+  --offer-label-muted:   #94A3B8;
+  --offer-headline-color:#0D1B3E;
+  --offer-headline-glow: rgba(34,197,94,0.15);
+  --offer-details-color: #4A5C82;
+  --offer-terms-color:   #94A3B8;
 }
+
 .dark {
-  --color-bg: #0A0F1E;
-  --color-bg-deep: #0D0D0D;
-  --color-bg-header: rgba(10,15,30,0.88);
-  --color-surface: rgba(255,255,255,0.04);
-  --color-surface-border: rgba(255,255,255,0.08);
-  --color-ink: #E8ECF4;
-  --color-ink-muted: #8A93A6;
+  /* Surfaces */
+  --color-bg:            #0C1220;
+  --color-bg-deep:       #07101B;
+  --color-bg-header:     rgba(12,18,32,0.92);
+  --color-surface:       rgba(255,255,255,0.055);
+  --color-surface-border:rgba(255,255,255,0.11);
+  /* Text */
+  --color-ink:           #EDF2FF;
+  --color-ink-muted:     #7B8DB0;
+  /* Shadows */
+  --shadow-card-hover:   0 0 28px rgba(59,130,246,0.14), 0 8px 24px rgba(0,0,0,0.45);
+  /* Component tokens — chips */
+  --chip-good-color:     #86EFAC;
+  --chip-good-bg:        rgba(34,197,94,0.12);
+  --chip-good-border:    rgba(34,197,94,0.35);
+  --chip-warn-color:     #FBBF24;
+  --chip-warn-bg:        rgba(251,191,36,0.10);
+  --chip-warn-border:    rgba(251,191,36,0.35);
+  --chip-note-color:     #93C5FD;
+  --chip-note-bg:        rgba(59,130,246,0.10);
+  --chip-note-border:    rgba(59,130,246,0.35);
+  --chip-neutral-color:  #B8C0CC;
+  --chip-neutral-bg:     rgba(255,255,255,0.05);
+  --chip-neutral-border: rgba(255,255,255,0.11);
+  /* Component tokens — offer block */
+  --offer-label-color:   #86EFAC;
+  --offer-label-muted:   #8A93A6;
+  --offer-headline-color:#FFFFFF;
+  --offer-headline-glow: rgba(34,197,94,0.45);
+  --offer-details-color: #B8C0CC;
+  --offer-terms-color:   #8A93A6;
 }
 
 @tailwind base;
@@ -68,8 +117,8 @@
   }
   .card-hover:hover {
     @apply -translate-y-1;
-    border-color: rgba(59, 130, 246, 0.5);
-    box-shadow: 0 0 28px rgba(59, 130, 246, 0.1), 0 8px 24px rgba(0, 0, 0, 0.3);
+    border-color: rgba(59, 130, 246, 0.45);
+    box-shadow: var(--shadow-card-hover);
   }
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-5 py-2.5 font-medium text-white transition-all duration-150
