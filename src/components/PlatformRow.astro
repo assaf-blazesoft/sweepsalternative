@@ -97,19 +97,15 @@ const ICON_PATHS: Record<PerkIcon, string> = {
     <!-- ── MOBILE layout (hidden on desktop) ── -->
     <div class="flex flex-col divide-y divide-surface-border md:hidden">
 
-      <!-- Section 1: Logo -->
-      <div class="flex flex-col items-center gap-2 py-6">
+      <!-- Section 1: Logo + Info combined -->
+      <div class="flex flex-col items-center px-5 py-6 text-center">
         <span class="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-surface-border bg-surface shadow-sm">
           {p.logoUrl
             ? <img src={p.logoUrl} alt={`${p.name} logo`} width="96" height="96" loading={imgLoading} fetchpriority={imgFetchpriority} decoding="async" class="h-full w-full object-cover" />
             : <span class="font-head text-2xl font-bold text-ink">{p.initials}</span>}
         </span>
-        {rank != null && <span class="mono-meta text-[0.65rem] tracking-widest">#{rank}</span>}
-      </div>
-
-      <!-- Section 2: Info -->
-      <div class="px-5 py-4 text-center">
-        <h3 class="font-head text-xl font-semibold text-ink">{p.name}</h3>
+        {rank != null && <span class="mono-meta mt-1 text-[0.65rem] tracking-widest">#{rank}</span>}
+        <h3 class="font-head mt-3 text-xl font-semibold text-ink">{p.name}</h3>
         <p class="mono-meta mt-1">{MODEL_META[p.model].label}</p>
         {p.perks && p.perks.length > 0 && (
           <div class="mt-3 flex flex-wrap justify-center gap-1.5">
