@@ -36,74 +36,83 @@ const ICON_PATHS: Record<PerkIcon, string> = {
     <span class="platform-row__ribbon">{p.featuredLabel}</span>
   )}
 
-  <div class="card card-hover grid grid-cols-1 gap-5 p-5 md:grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)_auto] md:items-center md:gap-6 md:p-6">
-    <!-- Logo + rank -->
-    <div class="flex items-center gap-4 md:flex-col md:items-center md:gap-2">
-      {rank != null && (
-        <span class="font-head text-2xl font-bold text-ink-muted md:order-2 md:mono-meta md:text-xs md:tracking-widest">
-          #{rank}
-        </span>
-      )}
-      <span class="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-surface-border bg-surface md:order-1 md:h-28 md:w-28">
-        {p.logoUrl
-          ? <img src={p.logoUrl} alt={`${p.name} logo`} width="112" height="112" loading={imgLoading} fetchpriority={imgFetchpriority} decoding="async" class="h-full w-full object-cover" />
-          : <span class="font-head text-2xl font-bold text-ink">{p.initials}</span>}
-      </span>
-    </div>
+  <div class="card card-hover p-4 md:p-6">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)_auto] md:items-center md:gap-6">
 
-    <!-- Name + perk chips + state pills -->
-    <div>
-      <h3 class="font-head text-xl font-semibold text-ink">{p.name}</h3>
-      <p class="mono-meta mt-1">{MODEL_META[p.model].label}</p>
+      <!-- On mobile: logo + name side-by-side flex row.
+           On desktop: md:contents makes this wrapper invisible so both
+           children slot into the 4-col grid as direct members. -->
+      <div class="flex items-start gap-3 md:contents">
 
-      {p.perks && p.perks.length > 0 && (
-        <div class="mt-3 flex flex-wrap items-center gap-1.5">
-          {p.perks.map((perk) => (
-            <span class={`perk-chip perk-chip--${perk.tone ?? 'neutral'}`}>
-              <svg viewBox="0 0 24 24" aria-hidden="true" class="perk-chip__icon">
-                <path d={ICON_PATHS[perk.icon]} fill="currentColor" />
-              </svg>
-              {perk.label}
-            </span>
-          ))}
+        <!-- Logo + rank -->
+        <div class="flex shrink-0 flex-col items-center gap-1 md:gap-2">
+          <span class="flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl border border-surface-border bg-surface md:h-28 md:w-28">
+            {p.logoUrl
+              ? <img src={p.logoUrl} alt={`${p.name} logo`} width="112" height="112" loading={imgLoading} fetchpriority={imgFetchpriority} decoding="async" class="h-full w-full object-cover" />
+              : <span class="font-head text-xl font-bold text-ink">{p.initials}</span>}
+          </span>
+          {rank != null && (
+            <span class="mono-meta text-[0.65rem] tracking-widest">#{rank}</span>
+          )}
         </div>
-      )}
 
-      <div class="mt-3 flex flex-wrap items-center gap-1.5">
-        {pillStates.map((c) => {
-          const a = availabilityIn(p, c);
-          return (
-            <span class={`rounded border px-2 py-0.5 font-mono text-[0.7rem] ${AVAIL_CLASS[a]}`}>
-              {c} {AVAIL_LABEL[a]}
-            </span>
-          );
-        })}
+        <!-- Name + perks + state pills -->
+        <div class="min-w-0 flex-1">
+          <h3 class="font-head text-lg font-semibold text-ink md:text-xl">{p.name}</h3>
+          <p class="mono-meta mt-0.5">{MODEL_META[p.model].label}</p>
+
+          {p.perks && p.perks.length > 0 && (
+            <div class="mt-2 flex flex-wrap items-center gap-1.5">
+              {p.perks.map((perk) => (
+                <span class={`perk-chip perk-chip--${perk.tone ?? 'neutral'}`}>
+                  <svg viewBox="0 0 24 24" aria-hidden="true" class="perk-chip__icon">
+                    <path d={ICON_PATHS[perk.icon]} fill="currentColor" />
+                  </svg>
+                  {perk.label}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <div class="mt-2 flex flex-wrap items-center gap-1.5">
+            {pillStates.map((c) => {
+              const a = availabilityIn(p, c);
+              return (
+                <span class={`rounded border px-2 py-0.5 font-mono text-[0.7rem] ${AVAIL_CLASS[a]}`}>
+                  {c} {AVAIL_LABEL[a]}
+                </span>
+              );
+            })}
+          </div>
+        </div>
+
       </div>
-    </div>
 
-    <!-- Offer block (middle column) -->
-    <div class="offer-block">
-      {p.offer ? (
-        <>
-          <p class="offer-block__label">Welcome offer</p>
-          <p class="offer-block__headline">{p.offer.headline}</p>
-          {p.offer.details && <p class="offer-block__details">{p.offer.details}</p>}
-          {p.offer.terms && <p class="offer-block__terms">{p.offer.terms}</p>}
-        </>
-      ) : (
-        <>
-          <p class="offer-block__label offer-block__label--muted">No verified offer yet</p>
-          <p class="offer-block__details">Still tracking this platform.</p>
-        </>
-      )}
-    </div>
+      <!-- Offer block -->
+      <div class="offer-block">
+        {p.offer ? (
+          <>
+            <p class="offer-block__label">Welcome offer</p>
+            <p class="offer-block__headline">{p.offer.headline}</p>
+            {p.offer.details && <p class="offer-block__details">{p.offer.details}</p>}
+            {p.offer.terms && <p class="offer-block__terms">{p.offer.terms}</p>}
+          </>
+        ) : (
+          <>
+            <p class="offer-block__label offer-block__label--muted">No offer yet</p>
+            <p class="offer-block__details">Still tracking this platform.</p>
+          </>
+        )}
+      </div>
 
-    <!-- CTA column -->
-    <div class="flex flex-col gap-2 md:w-52">
-      <a href={p.outboundUrl} target="_blank" rel={rel} class="btn-primary w-full justify-center px-5 py-3.5 text-base font-semibold">
-        {ctaLabel} ↗
-      </a>
-      <a href={`/review/${p.slug}`} class="btn-ghost w-full justify-center px-5 py-2 text-sm opacity-75 hover:opacity-100">Read review</a>
+      <!-- CTA -->
+      <div class="flex flex-col gap-2 md:w-52">
+        <a href={p.outboundUrl} target="_blank" rel={rel} class="btn-primary w-full justify-center px-5 py-3 text-base font-semibold">
+          {ctaLabel} ↗
+        </a>
+        <a href={`/review/${p.slug}`} class="btn-ghost w-full justify-center px-5 py-2 text-sm opacity-75 hover:opacity-100">Read review</a>
+      </div>
+
     </div>
   </div>
 </article>
