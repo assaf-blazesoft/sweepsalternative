@@ -104,7 +104,6 @@ const ICON_PATHS: Record<PerkIcon, string> = {
         {ctaLabel} ↗
       </a>
       <a href={`/review/${p.slug}`} class="btn-ghost w-full justify-center px-5 py-2 text-sm opacity-75 hover:opacity-100">Read review</a>
-      <p class="mono-meta text-center text-xs">✓ Verified {p.lastVerified}</p>
     </div>
   </div>
 </article>
@@ -169,20 +168,11 @@ const ICON_PATHS: Record<PerkIcon, string> = {
 
   /* Offer block */
   .offer-block {
-    border: 1px solid rgba(34, 197, 94, 0.28);
+    border: 1px solid var(--color-surface-border);
     border-radius: 12px;
     padding: 16px 18px;
-    background: linear-gradient(160deg, rgba(34, 197, 94, 0.09) 0%, rgba(34, 197, 94, 0.02) 100%);
+    background: var(--color-surface);
     text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .offer-block::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(34, 197, 94, 0.10), transparent 70%);
-    pointer-events: none;
   }
   .offer-block__label {
     font-family: '"IBM Plex Mono"', ui-monospace, monospace;
@@ -202,7 +192,7 @@ const ICON_PATHS: Record<PerkIcon, string> = {
     color: var(--offer-headline-color);
     margin: 6px 0 3px;
     line-height: 1.2;
-    text-shadow: 0 0 20px var(--offer-headline-glow);
+    text-shadow: none;
   }
   .offer-block__details {
     font-size: 0.8125rem;
