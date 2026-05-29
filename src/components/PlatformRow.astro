@@ -97,9 +97,9 @@ const ICON_PATHS: Record<PerkIcon, string> = {
     <!-- ── MOBILE layout (hidden on desktop) ── -->
     <div class="flex flex-col divide-y divide-surface-border md:hidden">
 
-      <!-- Section 1: Logo + Info side by side -->
+      <!-- Section 1: Logo + Info side by side 50/50 -->
       <div class="flex items-center gap-4 px-5 py-5">
-        <div class="flex shrink-0 flex-col items-center gap-1">
+        <div class="flex w-1/2 shrink-0 flex-col items-center gap-1">
           <span class="flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border border-surface-border bg-surface shadow-sm">
             {p.logoUrl
               ? <img src={p.logoUrl} alt={`${p.name} logo`} width="80" height="80" loading={imgLoading} fetchpriority={imgFetchpriority} decoding="async" class="h-full w-full object-cover" />
@@ -107,7 +107,7 @@ const ICON_PATHS: Record<PerkIcon, string> = {
           </span>
           {rank != null && <span class="mono-meta text-[0.65rem] tracking-widest">#{rank}</span>}
         </div>
-        <div class="min-w-0 flex-1">
+        <div class="w-1/2 min-w-0">
           <h3 class="font-head text-lg font-semibold text-ink">{p.name}</h3>
           <p class="mono-meta mt-0.5">{MODEL_META[p.model].label}</p>
           {p.perks && p.perks.length > 0 && (
