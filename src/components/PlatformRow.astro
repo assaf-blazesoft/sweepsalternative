@@ -107,11 +107,11 @@ const ICON_PATHS: Record<PerkIcon, string> = {
           </span>
           {rank != null && <span class="mono-meta text-[0.65rem] tracking-widest">#{rank}</span>}
         </div>
-        <div class="w-1/2 min-w-0">
+        <div class="w-1/2 min-w-0 text-center">
           <h3 class="font-head text-lg font-semibold text-ink">{p.name}</h3>
           <p class="mono-meta mt-0.5">{MODEL_META[p.model].label}</p>
           {p.perks && p.perks.length > 0 && (
-            <div class="mt-2 flex flex-wrap gap-1.5">
+            <div class="mt-2 flex flex-wrap justify-center gap-1.5">
               {p.perks.map((perk) => (
                 <span class={`perk-chip perk-chip--${perk.tone ?? 'neutral'}`}>
                   <svg viewBox="0 0 24 24" aria-hidden="true" class="perk-chip__icon"><path d={ICON_PATHS[perk.icon]} fill="currentColor" /></svg>
@@ -120,7 +120,7 @@ const ICON_PATHS: Record<PerkIcon, string> = {
               ))}
             </div>
           )}
-          <div class="mt-1.5 flex flex-wrap gap-1.5">
+          <div class="mt-1.5 flex flex-wrap justify-center gap-1.5">
             {pillStates.map((c) => {
               const a = availabilityIn(p, c);
               return <span class={`rounded border px-2 py-0.5 font-mono text-[0.7rem] ${AVAIL_CLASS[a]}`}>{c} {AVAIL_LABEL[a]}</span>;
