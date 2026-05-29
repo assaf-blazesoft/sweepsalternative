@@ -1,14 +1,18 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,ts,tsx,md,mdx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        // Dark editorial surfaces
-        bg: '#0A0F1E',
-        'bg-deep': '#0D0D0D',
-        surface: 'rgba(255,255,255,0.04)',
-        'surface-border': 'rgba(255,255,255,0.08)',
+        // Theme-aware surfaces (resolved by CSS custom properties)
+        bg: 'var(--color-bg)',
+        'bg-deep': 'var(--color-bg-deep)',
+        surface: 'var(--color-surface)',
+        'surface-border': 'var(--color-surface-border)',
+        // Text
+        ink: 'var(--color-ink)',
+        'ink-muted': 'var(--color-ink-muted)',
         // Single primary accent
         accent: '#3B82F6',
         'accent-bright': '#0EA5E9',
@@ -20,9 +24,6 @@ export default {
         restricted: '#F59E0B',
         atrisk: '#EAB308',
         legal: '#1E2A3A',
-        // Text
-        ink: '#E8ECF4',
-        'ink-muted': '#8A93A6',
       },
       fontFamily: {
         head: ['"Space Grotesk"', 'system-ui', 'sans-serif'],

@@ -21,7 +21,7 @@ const AVAIL_CLASS: Record<string, string> = {
 <article class="card card-hover flex flex-col p-5">
   <div class="flex items-start justify-between gap-3">
     <div class="flex items-center gap-3">
-      <span class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-surface-border bg-white/5 font-head text-sm font-bold text-ink">
+      <span class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-surface-border bg-surface font-head text-sm font-bold text-ink">
         {p.logoUrl
           ? <img src={p.logoUrl} alt={`${p.name} logo`} width="44" height="44" loading="lazy" decoding="async" class="h-full w-full object-contain" />
           : p.initials}

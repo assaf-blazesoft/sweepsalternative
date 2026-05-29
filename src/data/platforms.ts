@@ -78,9 +78,9 @@ export const PLATFORMS: Platform[] = [
       { icon: 'pin', label: 'CA · NY · most states', tone: 'note' },
     ],
     offer: {
-      headline: '200,000 Coins + 50 Sweeps',
+      headline: 'Welcome Bonus: Get up to 1,000 Tickets',
       details: 'Welcome pack on first verified deposit',
-      terms: '21+. T&Cs apply.',
+      terms: '18+. T&Cs apply.',
     },
     featuredLabel: 'Our pick',
     outboundUrl: 'https://albumza.com/?utm_source=sweepsalternative&utm_medium=affiliate&utm_campaign=directory',
@@ -125,7 +125,7 @@ export const PLATFORMS: Platform[] = [
       { icon: 'pin', label: 'CA · NY', tone: 'note' },
     ],
     offer: {
-      headline: '500,000 Coins + 50 Sweeps',
+      headline: '2 Mystery Coins',
       details: 'Welcome pack on first deposit',
       terms: '21+. T&Cs apply.',
     },

@@ -6,6 +6,26 @@
 @import '@fontsource/ibm-plex-mono/400.css';
 @import '@fontsource/ibm-plex-mono/500.css';
 
+/* ─── Theme tokens ─────────────────────────────────────── */
+:root {
+  --color-bg: #FFFFFF;
+  --color-bg-deep: #F1F5F9;
+  --color-bg-header: rgba(255,255,255,0.92);
+  --color-surface: rgba(0,0,0,0.04);
+  --color-surface-border: rgba(0,0,0,0.10);
+  --color-ink: #0F172A;
+  --color-ink-muted: #64748B;
+}
+.dark {
+  --color-bg: #0A0F1E;
+  --color-bg-deep: #0D0D0D;
+  --color-bg-header: rgba(10,15,30,0.88);
+  --color-surface: rgba(255,255,255,0.04);
+  --color-surface-border: rgba(255,255,255,0.08);
+  --color-ink: #E8ECF4;
+  --color-ink-muted: #8A93A6;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,8 +33,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    background-color: theme('colors.bg');
-    color: theme('colors.ink');
+    background-color: var(--color-bg);
+    color: var(--color-ink);
   }
   body {
     @apply font-body text-body antialiased;
@@ -43,31 +63,44 @@
   .card {
     @apply rounded-xl border border-surface-border bg-surface transition-all duration-200;
   }
+  .card-hover {
+    @apply transition-all duration-200;
+  }
   .card-hover:hover {
-    @apply -translate-y-0.5;
-    border-color: rgba(59, 130, 246, 0.4);
+    @apply -translate-y-1;
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 28px rgba(59, 130, 246, 0.1), 0 8px 24px rgba(0, 0, 0, 0.3);
   }
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-5 py-2.5 font-medium text-white transition-all hover:shadow-[0_0_24px_rgba(59,130,246,0.45)];
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-5 py-2.5 font-medium text-white transition-all duration-150
+      hover:bg-accent-bright hover:shadow-[0_0_28px_rgba(59,130,246,0.55)] hover:scale-[1.03]
+      active:scale-[0.97] active:shadow-none;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-accent/60 px-5 py-2.5 font-medium text-accent transition-colors hover:bg-accent/10;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-accent/60 px-5 py-2.5 font-medium text-accent transition-all duration-150
+      hover:border-accent hover:bg-accent/15 hover:scale-[1.02]
+      active:scale-[0.97];
   }
   .mono-meta {
     @apply font-mono text-meta text-ink-muted;
   }
 
-  /* Native select: force a dark option list (fixes white-on-white dropdown) */
+  /* Native select: adapt to current theme */
   .field-select {
+    color-scheme: light;
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+  }
+  .dark .field-select {
     color-scheme: dark;
   }
   .field-select option {
-    background-color: #0D0D0D;
-    color: #E8ECF4;
+    background-color: var(--color-bg-deep);
+    color: var(--color-ink);
   }
   .field-select optgroup {
-    background-color: #0D0D0D;
-    color: #8A93A6;
+    background-color: var(--color-bg-deep);
+    color: var(--color-ink-muted);
     font-style: normal;
   }
 
@@ -106,7 +139,13 @@
     @apply border-l-2 border-accent/50 pl-4 italic text-ink;
   }
   .prose-content code {
-    @apply rounded bg-white/5 px-1.5 py-0.5 font-mono text-[0.9em];
+    @apply rounded bg-surface px-1.5 py-0.5 font-mono text-[0.9em];
+  }
+
+  /* Performance: skip layout for off-screen content */
+  .content-lazy {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
   }
 }
 

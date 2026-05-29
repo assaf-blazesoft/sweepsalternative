@@ -155,7 +155,7 @@ function Card({ platform: p, pillStates }: { platform: Platform; pillStates: str
     <article class="card card-hover flex flex-col p-5">
       <div class="flex items-start justify-between gap-3">
         <div class="flex items-center gap-3">
-          <span class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-surface-border bg-white/5 font-head text-sm font-bold text-ink">
+          <span class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-surface-border bg-surface font-head text-sm font-bold text-ink">
             {p.logoUrl ? (
               <img src={p.logoUrl} alt={`${p.name} logo`} width={44} height={44} loading="lazy" decoding="async" class="h-full w-full object-contain" />
             ) : (
@@ -215,7 +215,7 @@ function EmptyState() {
           type="email"
           required
           placeholder="you@email.com"
-          class="flex-1 rounded-lg border border-surface-border bg-white/5 px-3 py-2 text-sm text-ink placeholder:text-ink-muted focus:border-accent focus:outline-none"
+          class="flex-1 rounded-lg border border-surface-border bg-surface px-3 py-2 text-sm text-ink placeholder:text-ink-muted focus:border-accent focus:outline-none"
         />
         <button type="submit" class="btn-primary px-4 py-2 text-sm">Notify me</button>
       </form>

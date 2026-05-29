@@ -57,7 +57,7 @@ const schema = [
           <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {related.map((r) => (
               <a href={`/review/${r.slug}`} class="card card-hover flex items-center gap-3 p-4">
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg border border-surface-border bg-white/5 font-head text-xs font-bold">{r.initials}</span>
+                <span class="flex h-9 w-9 items-center justify-center rounded-lg border border-surface-border bg-surface font-head text-xs font-bold">{r.initials}</span>
                 <span class="font-medium text-ink">{r.name}</span>
               </a>
             ))}

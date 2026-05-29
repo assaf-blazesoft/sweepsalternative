@@ -100,7 +100,7 @@ const schema = [
           <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {related.map((r) => (
               <a href={`/review/${r.slug}`} class="card card-hover flex items-center gap-3 p-4">
-                <span class="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-surface-border bg-white/5 font-head text-xs font-bold">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-surface-border bg-surface font-head text-xs font-bold">
                   {r.logoUrl
                     ? <img src={r.logoUrl} alt={`${r.name} logo`} width="36" height="36" loading="lazy" decoding="async" class="h-full w-full object-contain" />
                     : r.initials}
