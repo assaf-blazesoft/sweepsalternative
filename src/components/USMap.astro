@@ -1,0 +1,172 @@
+---
+import { STATE_BY_CODE, TIER_META, LAST_UPDATED, type BanTier } from '../data/states';
+import { TILE_LAYOUT, GRID_ROWS, GRID_COLS } from '../data/mapLayout';
+
+interface Props {
+  caption?: boolean;
+}
+const { caption = true } = Astro.props;
+
+// All US states + DC. Non-tracked states render muted ("legal").
+const ALL_CODES = Object.keys(TILE_LAYOUT);
+
+interface Tile {
+  code: string;
+  row: number;
+  col: number;
+  name: string;
+  tier: BanTier;
+  law?: string;
+  effective?: string;
+  slug?: string;
+  interactive: boolean;
+}
+
+const tiles: Tile[] = ALL_CODES.map((code) => {
+  const [row, col] = TILE_LAYOUT[code];
+  const entry = STATE_BY_CODE[code];
+  if (entry) {
+    return {
+      code,
+      row,
+      col,
+      name: entry.name,
+      tier: entry.tier,
+      law: entry.law,
+      effective: entry.effective,
+      slug: entry.slug,
+      interactive: true,
+    };
+  }
+  return { code, row, col, name: code, tier: 'legal', interactive: false };
+});
+---
+<figure class="w-full">
+  {caption && (
+    <figcaption class="mb-4 flex flex-wrap items-end justify-between gap-2">
+      <p class="font-head text-h3 text-ink">Dual-currency sweepstakes: the current ban map</p>
+      <p class="mono-meta">Updated {LAST_UPDATED}</p>
+    </figcaption>
+  )}
+
+  <div
+    class="usmap grid gap-1.5 sm:gap-2"
+    style={`grid-template-columns:repeat(${GRID_COLS},minmax(0,1fr));grid-template-rows:repeat(${GRID_ROWS},minmax(0,1fr));`}
+    role="group"
+    aria-label="US map of states where dual-currency sweepstakes casinos are banned"
+  >
+    {tiles.map((t) => {
+      const meta = TIER_META[t.tier];
+      const style = `grid-column:${t.col + 1};grid-row:${t.row + 1};`;
+      const tierClass = `tile tile--${t.tier}`;
+      if (t.interactive && t.slug) {
+        return (
+          <a
+            href={`/state/${t.slug}`}
+            class={tierClass}
+            style={style}
+            aria-label={`${t.name}: ${meta.tooltip}${t.law ? `, ${t.law}` : ''}${t.effective ? `, ${t.effective}` : ''}`}
+          >
+            <span class="tile__code">{t.code}</span>
+            <span class="tile__tip" role="tooltip">
+              <span class="tile__tip-name">{t.name}</span>
+              <span class="tile__tip-badge" style={`--c:${meta.color}`}>{meta.label}</span>
+              {t.law && <span class="tile__tip-law">{t.law}</span>}
+              {t.effective && <span class="tile__tip-date">{t.effective}</span>}
+            </span>
+          </a>
+        );
+      }
+      return (
+        <span class={tierClass} style={style} aria-hidden="false" aria-label={`${t.code}: no ban in effect`}>
+          <span class="tile__code">{t.code}</span>
+        </span>
+      );
+    })}
+  </div>
+
+  <ul class="mt-5 flex flex-wrap gap-x-5 gap-y-2 mono-meta" aria-label="Map legend">
+    {(['banned', 'restricted', 'atrisk', 'legal'] as BanTier[]).map((tier) => (
+      <li class="flex items-center gap-2">
+        <span class="inline-block h-2.5 w-2.5 rounded-sm" style={`background:${TIER_META[tier].color}`}></span>
+        {TIER_META[tier].tooltip}
+      </li>
+    ))}
+  </ul>
+</figure>
+
+<style>
+  .usmap {
+    max-width: 56rem;
+    aspect-ratio: 11 / 8;
+  }
+  .tile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-family: '"IBM Plex Mono"', ui-monospace, monospace;
+    font-size: clamp(0.5rem, 1.4vw, 0.75rem);
+    font-weight: 500;
+    color: rgba(232, 236, 244, 0.55);
+    text-decoration: none;
+    transition: filter 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  }
+  .tile__code { pointer-events: none; }
+  .tile--banned { background: #EF4444; color: #fff; }
+  .tile--restricted { background: #F59E0B; color: #1A1206; }
+  .tile--atrisk { background: #EAB308; color: #1A1602; }
+  .tile--legal { background: #1E2A3A; }
+
+  /* Interactive states (anchors) lift + glow on hover/focus */
+  a.tile { cursor: pointer; }
+  a.tile:hover,
+  a.tile:focus-visible {
+    filter: brightness(1.15);
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25), 0 6px 18px rgba(0, 0, 0, 0.4);
+    z-index: 20;
+    outline: none;
+  }
+
+  .tile__tip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: max-content;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: #0D0D0D;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #E8ECF4;
+    text-align: left;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 150ms ease, transform 150ms ease;
+    z-index: 30;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+  a.tile:hover .tile__tip,
+  a.tile:focus-visible .tile__tip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .tile__tip-name { font-family: inherit; font-size: 0.8125rem; font-weight: 600; }
+  .tile__tip-badge {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--c);
+  }
+  .tile__tip-law,
+  .tile__tip-date { font-size: 0.6875rem; color: #8A93A6; }
+
+  @media (prefers-reduced-motion: reduce) {
+    a.tile:hover, a.tile:focus-visible { transform: none; }
+    .tile__tip { transition: opacity 150ms ease; }
+  }
+</style>

@@ -1,0 +1,124 @@
+@import '@fontsource/space-grotesk/500.css';
+@import '@fontsource/space-grotesk/700.css';
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background-color: theme('colors.bg');
+    color: theme('colors.ink');
+  }
+  body {
+    @apply font-body text-body antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-head text-ink;
+    text-wrap: balance;
+  }
+  a {
+    @apply transition-colors;
+  }
+  ::selection {
+    background-color: theme('colors.accent');
+    color: white;
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-content px-5 sm:px-6 lg:px-8;
+  }
+  .prose-x {
+    @apply mx-auto w-full max-w-prose;
+  }
+  /* Glass card on dark surface (PRD: border, no box-shadow) */
+  .card {
+    @apply rounded-xl border border-surface-border bg-surface transition-all duration-200;
+  }
+  .card-hover:hover {
+    @apply -translate-y-0.5;
+    border-color: rgba(59, 130, 246, 0.4);
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-5 py-2.5 font-medium text-white transition-all hover:shadow-[0_0_24px_rgba(59,130,246,0.45)];
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-accent/60 px-5 py-2.5 font-medium text-accent transition-colors hover:bg-accent/10;
+  }
+  .mono-meta {
+    @apply font-mono text-meta text-ink-muted;
+  }
+
+  /* Native select: force a dark option list (fixes white-on-white dropdown) */
+  .field-select {
+    color-scheme: dark;
+  }
+  .field-select option {
+    background-color: #0D0D0D;
+    color: #E8ECF4;
+  }
+  .field-select optgroup {
+    background-color: #0D0D0D;
+    color: #8A93A6;
+    font-style: normal;
+  }
+
+  /* Scroll-reveal: hidden until .is-visible is added by the IntersectionObserver */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* MDX editorial body */
+  .prose-content {
+    @apply text-body text-ink-muted;
+  }
+  .prose-content > * + * { margin-top: 1.25rem; }
+  .prose-content h2 {
+    @apply mt-12 font-head text-h2 text-ink;
+    scroll-margin-top: 5rem;
+  }
+  .prose-content h3 {
+    @apply mt-8 font-head text-h3 text-ink;
+  }
+  .prose-content a { @apply text-accent underline underline-offset-2 hover:text-accent-bright; }
+  .prose-content strong { @apply font-semibold text-ink; }
+  .prose-content ul { @apply ml-5 list-disc space-y-2; }
+  .prose-content ol { @apply ml-5 list-decimal space-y-2; }
+  .prose-content blockquote {
+    @apply border-l-2 border-accent/50 pl-4 italic text-ink;
+  }
+  .prose-content code {
+    @apply rounded bg-white/5 px-1.5 py-0.5 font-mono text-[0.9em];
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config';
+import { bannedStates } from '../data/states';
+
+const title = `Page not found | ${SITE.name}`;
+const description = `That page doesn't exist. Here's how to find what you're looking for.`;
+const popular = bannedStates.slice(0, 6);
+---
+<Base title={title} description={description} canonical="/404">
+  <section class="container-x py-24 text-center">
+    <p class="font-mono text-meta uppercase tracking-widest text-accent">404</p>
+    <h1 class="mt-3 text-h1">That page got banned. (Just kidding, it doesn't exist.)</h1>
+    <p class="mx-auto mt-4 max-w-prose text-ink-muted">
+      The page you're looking for isn't here. It may have moved, or the link may be out of date.
+      Here's how to get back on track.
+    </p>
+
+    <div class="mx-auto mt-10 flex max-w-md flex-col gap-3 sm:flex-row sm:justify-center">
+      <a href="/alternatives" class="btn-primary px-6 py-3">Browse all alternatives</a>
+      <a href="/map" class="btn-ghost px-6 py-3">See the ban map</a>
+    </div>
+
+    <div class="mx-auto mt-12 max-w-lg text-left">
+      <p class="mono-meta uppercase tracking-wide">Popular state pages</p>
+      <ul class="mt-3 grid grid-cols-2 gap-2">
+        {popular.map((s) => (
+          <li>
+            <a href={`/state/${s.slug}`} class="text-ink-muted hover:text-ink">
+              Alternatives in {s.name} →
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>

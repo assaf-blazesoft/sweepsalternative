@@ -1,0 +1,52 @@
+---
+import { MODEL_META, RISK_META, availabilityIn, type Platform } from '../data/platforms';
+
+interface Props {
+  platform: Platform;
+  verdict: string;
+}
+const { platform: p, verdict } = Astro.props;
+const risk = RISK_META[p.risk];
+const rel = p.affiliate ? 'nofollow sponsored noopener' : 'noopener';
+
+const AVAIL: Record<string, { label: string; cls: string }> = {
+  yes: { label: 'Available', cls: 'text-emerald-400' },
+  no: { label: 'Not available', cls: 'text-red-400/80' },
+  partial: { label: 'Partial', cls: 'text-amber-400' },
+  unknown: { label: 'Unconfirmed', cls: 'text-ink-muted' },
+};
+const ca = AVAIL[availabilityIn(p, 'CA')];
+const ny = AVAIL[availabilityIn(p, 'NY')];
+---
+<aside class="card p-6">
+  <div class="grid grid-cols-2 gap-y-4 sm:grid-cols-4">
+    <div>
+      <p class="mono-meta uppercase tracking-wide">Legal model</p>
+      <p class="mt-1 font-medium text-ink">{MODEL_META[p.model].label}</p>
+    </div>
+    <div>
+      <p class="mono-meta uppercase tracking-wide">California</p>
+      <p class={`mt-1 font-medium ${ca.cls}`}>{ca.label}</p>
+    </div>
+    <div>
+      <p class="mono-meta uppercase tracking-wide">New York</p>
+      <p class={`mt-1 font-medium ${ny.cls}`}>{ny.label}</p>
+    </div>
+    <div>
+      <p class="mono-meta uppercase tracking-wide">Risk level</p>
+      <p class="mt-1 flex items-center gap-2 font-medium text-ink">
+        <span class="inline-block h-2.5 w-2.5 rounded-full" style={`background:${risk.color}`}></span>
+        {risk.label}
+      </p>
+    </div>
+  </div>
+
+  <p class="mt-5 border-t border-surface-border pt-5 text-ink-muted">{verdict}</p>
+
+  <div class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <p class="mono-meta">Last verified {p.lastVerified}</p>
+    <a href={p.outboundUrl} target="_blank" rel={rel} class="btn-primary px-6 py-2.5">
+      Visit {p.name} ↗
+    </a>
+  </div>
+</aside>

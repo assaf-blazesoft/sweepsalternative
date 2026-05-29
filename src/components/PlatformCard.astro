@@ -1,0 +1,65 @@
+---
+import { MODEL_META, RISK_META, availabilityIn, type Platform } from '../data/platforms';
+
+interface Props {
+  platform: Platform;
+  /** State codes to show as availability pills */
+  pillStates?: string[];
+}
+const { platform: p, pillStates = ['CA', 'NY'] } = Astro.props;
+const risk = RISK_META[p.risk];
+const rel = p.affiliate ? 'nofollow sponsored noopener' : 'noopener';
+
+const AVAIL_LABEL: Record<string, string> = { yes: '✓', no: '✗', partial: '~', unknown: '?' };
+const AVAIL_CLASS: Record<string, string> = {
+  yes: 'text-emerald-400 border-emerald-400/40',
+  no: 'text-red-400/70 border-red-400/30',
+  partial: 'text-amber-400 border-amber-400/40',
+  unknown: 'text-ink-muted border-surface-border',
+};
+---
+<article class="card card-hover flex flex-col p-5">
+  <div class="flex items-start justify-between gap-3">
+    <div class="flex items-center gap-3">
+      <span class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-surface-border bg-white/5 font-head text-sm font-bold text-ink">
+        {p.logoUrl
+          ? <img src={p.logoUrl} alt={`${p.name} logo`} width="44" height="44" loading="lazy" decoding="async" class="h-full w-full object-contain" />
+          : p.initials}
+      </span>
+      <div>
+        <h3 class="font-head text-lg font-semibold text-ink">{p.name}</h3>
+        <span class="mono-meta border-l-2 pl-2" style={`border-color:${risk.color}`}>
+          {MODEL_META[p.model].label}
+        </span>
+      </div>
+    </div>
+    {p.affiliate && (
+      <span class="mono-meta rounded border border-surface-border px-1.5 py-0.5 text-[0.6rem] uppercase">affiliate</span>
+    )}
+  </div>
+
+  <div class="mt-4 flex flex-wrap items-center gap-1.5">
+    {pillStates.map((c) => {
+      const a = availabilityIn(p, c);
+      return (
+        <span class={`rounded border px-2 py-0.5 font-mono text-[0.7rem] ${AVAIL_CLASS[a]}`}>
+          {c} {AVAIL_LABEL[a]}
+        </span>
+      );
+    })}
+    <span class="ml-auto flex items-center gap-1.5 mono-meta">
+      <span class="inline-block h-2 w-2 rounded-full" style={`background:${risk.color}`}></span>
+      {risk.label} risk
+    </span>
+  </div>
+
+  <p class="mt-3 flex-1 text-sm leading-relaxed text-ink-muted">{p.blurb}</p>
+  <p class="mt-3 mono-meta">Last verified {p.lastVerified}</p>
+
+  <div class="mt-4 flex gap-3">
+    <a href={`/review/${p.slug}`} class="btn-ghost flex-1 px-4 py-2 text-sm">Full review</a>
+    <a href={p.outboundUrl} target="_blank" rel={rel} class="btn-primary flex-1 px-4 py-2 text-sm">
+      Visit ↗
+    </a>
+  </div>
+</article>

@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { SITE } from '../config';
+import { organizationSchema, breadcrumbSchema } from '../lib/schema';
+
+const title = `About: Why this site exists | ${SITE.name}`;
+const description = `${SITE.name} is an independent resource for players in states where sweepstakes casinos were banned. Here's who we are and why we built it.`;
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'About', path: '/about' }];
+---
+<Base title={title} description={description} schema={[organizationSchema(), breadcrumbSchema(crumbs)]} canonical="/about">
+  <Breadcrumbs crumbs={crumbs} />
+  <article class="container-x py-10">
+    <div class="prose-content mx-auto max-w-prose">
+      <p class="mono-meta uppercase tracking-widest text-accent">About</p>
+      <h1 class="mt-3 font-head text-h1 text-ink">Why this site exists</h1>
+
+      <p class="mt-6">
+        I started following the sweepstakes casino space closely when the first ban bills appeared.
+        What struck me wasn't the legal drama, it was the players left behind. State after state,
+        millions of people who'd been playing legally woke up to find their platforms gone and no
+        clear, trustworthy place to figure out what they could still do.
+      </p>
+      <p>
+        The coverage that existed was either written for operators, or it was an affiliate farm
+        dressed up as journalism, the kind of site that looks identical to the platforms it claims
+        to review. None of it answered the simple question players were actually asking:
+        <strong>what can I still legally play where I live?</strong>
+      </p>
+      <p>So I built this.</p>
+
+      <h2>What we are</h2>
+      <p>
+        {SITE.name} is an independent editorial resource. We track the legal alternatives to banned
+        sweepstakes casinos, across every affected state, and we explain how each one stays legal,
+        where it's available, and how much regulatory risk it carries. Think of it as a field guide,
+        not a casino.
+      </p>
+
+      <h2>What we are not</h2>
+      <p>
+        We are not a casino, a gambling operator, or an operator-owned review site. We don't take
+        money to rank a platform higher, and we don't hide the platforms with problems. When a
+        platform's legal status is unconfirmed or shaky, we say so plainly, even when it would be
+        more profitable not to.
+      </p>
+
+      <h2>How we make money</h2>
+      <p>
+        Some links on this site are affiliate links, meaning we may earn a commission if you sign up
+        through them, at no cost to you. That revenue keeps the site independent and updated. It
+        never changes our ratings or what we choose to list. You can read exactly how we handle this
+        on our <a href="/affiliate-disclosure">affiliate disclosure</a> and
+        <a href="/methodology">methodology</a> pages.
+      </p>
+
+      <h2>Get in touch</h2>
+      <p>
+        Found something out of date? A platform changed status? A new alternative we should cover?
+        Email me directly at <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>. This
+        space moves fast, and reader tips are one of the best ways we keep up.
+      </p>
+
+      <p class="mono-meta">By {SITE.author}</p>
+    </div>
+  </article>
+</Base>

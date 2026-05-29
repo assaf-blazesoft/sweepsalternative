@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import Directory from '../components/Directory.tsx';
+import AffiliateDisclosure from '../components/AffiliateDisclosure.astro';
+import { SITE } from '../config';
+import { PLATFORM_COUNT } from '../data/platforms';
+import { LAST_UPDATED } from '../data/states';
+import { breadcrumbSchema } from '../lib/schema';
+
+const title = `Legal Sweepstakes Casino Alternatives: Full Directory (2026) | ${SITE.name}`;
+const description = `Every legal alternative we track for players in banned states, filterable by state, legal model, and risk level. ${PLATFORM_COUNT} platforms, each with a last-verified date.`;
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Alternatives', path: '/alternatives' },
+];
+---
+<Base title={title} description={description} schema={[breadcrumbSchema(crumbs)]} canonical="/alternatives" showDisclosure>
+  <section class="container-x py-14">
+    <p class="mono-meta uppercase tracking-widest text-accent">Directory · Updated {LAST_UPDATED}</p>
+    <h1 class="mt-3 text-h1">Legal sweepstakes casino alternatives</h1>
+    <p class="mt-4 max-w-prose text-body text-ink-muted">
+      Every platform we track, filterable by your state, the legal model, and how much regulatory
+      risk you're willing to take. Each entry carries a last-verified date, because in this space,
+      when we checked matters as much as what we found.
+    </p>
+
+    <div class="mt-10">
+      <Directory client:visible defaultStates={[]} />
+    </div>
+  </section>
+</Base>

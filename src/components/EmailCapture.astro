@@ -1,0 +1,72 @@
+---
+interface Props {
+  headline: string;
+  subline: string;
+  /** segmentation source tag, e.g. "homepage-hero" */
+  source?: string;
+  /** prefill state code for segmentation, e.g. "CA" */
+  state?: string;
+  variant?: 'inline' | 'panel';
+}
+const { headline, subline, source = 'unknown', state = '', variant = 'inline' } = Astro.props;
+const isPanel = variant === 'panel';
+---
+<section
+  class:list={[
+    'email-capture',
+    isPanel && 'card p-8 sm:p-10',
+  ]}
+  data-source={source}
+  data-state={state}
+>
+  <div class:list={[isPanel ? 'mx-auto max-w-xl text-center' : '']}>
+    <h2 class:list={['font-head font-semibold text-ink', isPanel ? 'text-h2' : 'text-h3']}>{headline}</h2>
+    <p class="mt-2 text-ink-muted">{subline}</p>
+    <form class="ec-form mt-5 flex flex-col gap-2 sm:flex-row" novalidate>
+      <label class="sr-only" for={`ec-${source}`}>Email address</label>
+      <input
+        id={`ec-${source}`}
+        name="email"
+        type="email"
+        required
+        autocomplete="email"
+        placeholder="you@email.com"
+        class="ec-input flex-1 rounded-lg border border-surface-border bg-white/5 px-4 py-3 text-ink placeholder:text-ink-muted focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+      />
+      <button type="submit" class="btn-primary px-6 py-3">
+        <span class="ec-btn-label">Notify me</span>
+        <span aria-hidden="true">→</span>
+      </button>
+    </form>
+    <p class="ec-msg mt-3 text-meta" role="status" aria-live="polite"></p>
+  </div>
+</section>
+
+<script>
+  import { subscribe } from '../lib/subscribe';
+
+  document.querySelectorAll<HTMLElement>('.email-capture').forEach((root) => {
+    const form = root.querySelector<HTMLFormElement>('.ec-form');
+    const input = root.querySelector<HTMLInputElement>('.ec-input');
+    const msg = root.querySelector<HTMLParagraphElement>('.ec-msg');
+    const btnLabel = root.querySelector<HTMLElement>('.ec-btn-label');
+    if (!form || !input || !msg) return;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.classList.remove('text-red-400', 'text-emerald-400');
+      if (btnLabel) btnLabel.textContent = 'Sending…';
+      const res = await subscribe({
+        email: input.value.trim(),
+        source: root.dataset.source,
+        state: root.dataset.state || undefined,
+      });
+      msg.textContent = res.ok
+        ? res.message
+        : `${res.message} Or email us at editor@sweepsalternative.com.`;
+      msg.classList.add(res.ok ? 'text-emerald-400' : 'text-red-400');
+      if (btnLabel) btnLabel.textContent = res.ok ? 'Done' : 'Notify me';
+      if (res.ok) form.reset();
+    });
+  });
+</script>

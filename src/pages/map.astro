@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import USMap from '../components/USMap.astro';
+import { SITE } from '../config';
+import { bannedStates, restrictedStates, atRiskStates, LAST_UPDATED } from '../data/states';
+import { breadcrumbSchema } from '../lib/schema';
+
+const title = `Sweepstakes Casino Ban Map: Where It's Banned in 2026 | ${SITE.name}`;
+const description = `An interactive map of every US state where dual-currency sweepstakes casinos are banned, restricted, or at risk. Updated ${LAST_UPDATED}.`;
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Ban map', path: '/map' },
+];
+
+const groups = [
+  { title: 'Banned by statute', states: bannedStates },
+  { title: 'Restricted (enforcement)', states: restrictedStates },
+  { title: 'At risk (pending)', states: atRiskStates },
+];
+---
+<Base title={title} description={description} schema={[breadcrumbSchema(crumbs)]} canonical="/map">
+  <section class="container-x py-14">
+    <h1 class="text-h1">The sweepstakes casino ban map</h1>
+    <p class="mt-4 max-w-prose text-body text-ink-muted">
+      Where dual-currency sweepstakes casinos stand across the United States, as of {LAST_UPDATED}.
+      Hover or tap any highlighted state for the law and effective date, then click through for the
+      full breakdown and legal alternatives.
+    </p>
+
+    <div class="mt-10 flex justify-center rounded-xl border border-surface-border bg-bg-deep p-6 sm:p-10">
+      <USMap caption={false} />
+    </div>
+
+    <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3">
+      {groups.map((g) => (
+        <div class="card p-6">
+          <h2 class="font-head text-h3 text-ink">{g.title}</h2>
+          <ul class="mt-4 space-y-2">
+            {g.states.map((s) => (
+              <li>
+                <a href={`/state/${s.slug}`} class="flex items-baseline justify-between gap-3 text-ink-muted hover:text-ink">
+                  <span>{s.name}</span>
+                  <span class="mono-meta">{s.law}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>

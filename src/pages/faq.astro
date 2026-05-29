@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { SITE } from '../config';
+import { faqSchema, breadcrumbSchema } from '../lib/schema';
+
+const title = `FAQ: Sweepstakes casino bans and alternatives | ${SITE.name}`;
+const description = `Answers to the most common questions about the sweepstakes casino bans and the legal alternatives still available in affected states.`;
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'FAQ', path: '/faq' }];
+
+const faqs = [
+  { q: 'Why were sweepstakes casinos banned?', a: 'States concluded the dual-currency model functioned as unlicensed online gambling. Bans came through new statutes or enforcement of existing gambling laws. See our guide on what happened.' },
+  { q: 'How many states have banned them?', a: 'As of May 2026, 13 states have effectively banned the model, with several more, including Washington DC, Minnesota, and Illinois, moving toward bans.' },
+  { q: 'What can I legally play instead?', a: 'It depends on your state. Legal alternatives use different models: parimutuel gaming, peer-to-peer daily fantasy sports, single-currency play, and CFTC-regulated prediction markets. Check your state page for specifics.' },
+  { q: 'Are the alternatives safe and legal?', a: 'The models differ in how established they are. Parimutuel and DFS rest on long-standing law (low risk). Single-currency and prediction markets are newer (medium risk). We flag anything we can’t confirm as unknown risk.' },
+  { q: 'Can I still use my old sweepstakes casino?', a: 'In a banned state, no, compliant operators have exited. If one still claims to serve a banned state, treat that as a warning sign rather than an opportunity.' },
+  { q: 'How often is this site updated?', a: 'We aim to re-verify regularly and reflect status changes within 48 hours of learning about them. Every entry carries a last-verified date so you can judge for yourself.' },
+  { q: 'Do you make money from this?', a: 'Some links are affiliate links and we may earn a commission at no cost to you. It never changes our ratings. See our affiliate disclosure and methodology.' },
+  { q: 'Is any of this legal advice?', a: 'No. This is an independent informational resource. Always verify a platform’s current legal status in your state before signing up.' },
+];
+---
+<Base title={title} description={description} schema={[faqSchema(faqs), breadcrumbSchema(crumbs)]} canonical="/faq">
+  <Breadcrumbs crumbs={crumbs} />
+  <article class="container-x py-10">
+    <div class="mx-auto max-w-prose">
+      <p class="mono-meta uppercase tracking-widest text-accent">FAQ</p>
+      <h1 class="mt-3 font-head text-h1 text-ink">Frequently asked questions</h1>
+      <dl class="mt-8 divide-y divide-surface-border">
+        {faqs.map((f) => (
+          <div class="py-5">
+            <dt class="font-head text-lg font-medium text-ink">{f.q}</dt>
+            <dd class="mt-2 text-ink-muted">{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </article>
+</Base>

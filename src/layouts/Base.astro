@@ -1,0 +1,121 @@
+---
+import '../styles/global.css';
+import { SITE, NAV, FOOTER_LINKS } from '../config';
+import { LAST_UPDATED } from '../data/states';
+import AffiliateDisclosure from '../components/AffiliateDisclosure.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path-only canonical override; defaults to current URL */
+  canonical?: string;
+  ogType?: 'website' | 'article';
+  /** JSON-LD objects to inject into <head> */
+  schema?: Record<string, unknown>[];
+  showDisclosure?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogType = 'website',
+  schema = [],
+  showDisclosure = false,
+} = Astro.props;
+
+const canonicalURL = new URL(canonical ?? Astro.url.pathname, Astro.site);
+// SVG placeholder, replace with a 1200x630 PNG before launch for full social-scraper support.
+const ogImage = new URL('/og-default.svg', Astro.site);
+const year = new Date().getFullYear();
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    {schema.map((obj) => (
+      <script type="application/ld+json" set:html={JSON.stringify(obj)} />
+    ))}
+
+    {SITE.analyticsEnabled && (
+      <script
+        defer
+        data-domain={SITE.domain}
+        src="https://plausible.io/js/script.js"></script>
+    )}
+  </head>
+  <body class="min-h-screen bg-bg text-ink">
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-white">
+      Skip to content
+    </a>
+
+    <header class="sticky top-0 z-40 border-b border-surface-border bg-bg/85 backdrop-blur">
+      <div class="container-x flex h-16 items-center justify-between gap-4">
+        <a href="/" class="font-head text-lg font-bold tracking-tight text-ink">
+          <span class="bg-gradient-to-r from-brand-green to-brand-gold bg-clip-text text-transparent">Sweeps</span>Alternative
+        </a>
+        <nav aria-label="Primary" class="hidden items-center gap-6 md:flex">
+          {NAV.map((item) => (
+            <a href={item.href} class="text-sm text-ink-muted hover:text-ink">{item.label}</a>
+          ))}
+        </nav>
+        <a href="/alternatives" class="btn-ghost hidden px-4 py-2 text-sm sm:inline-flex">
+          See alternatives
+        </a>
+      </div>
+    </header>
+
+    {showDisclosure && <AffiliateDisclosure />}
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="mt-24 border-t border-surface-border bg-bg-deep">
+      <div class="container-x py-12">
+        <div class="flex flex-col gap-8 md:flex-row md:justify-between">
+          <div class="max-w-sm">
+            <a href="/" class="font-head text-base font-bold text-ink">
+              <span class="bg-gradient-to-r from-brand-green to-brand-gold bg-clip-text text-transparent">Sweeps</span>Alternative
+            </a>
+            <p class="mt-3 text-meta text-ink-muted">{SITE.tagline}</p>
+            <p class="mt-4 mono-meta">Last updated: {LAST_UPDATED}</p>
+          </div>
+          <nav aria-label="Footer" class="grid grid-cols-2 gap-x-12 gap-y-2 text-sm">
+            {[...NAV, ...FOOTER_LINKS].map((item) => (
+              <a href={item.href} class="text-ink-muted hover:text-ink">{item.label}</a>
+            ))}
+          </nav>
+        </div>
+        <div class="mt-10 border-t border-surface-border pt-6 text-meta text-ink-muted">
+          <p>
+            &copy; {year} {SITE.name}. Independent editorial resource. This site is not a casino
+            and does not offer gambling. Content is informational and not legal advice; verify a
+            platform's legal status in your state before signing up.
+          </p>
+          <p class="mt-2">
+            Contains affiliate links, <a href="/affiliate-disclosure" class="underline hover:text-ink">see disclosure</a>.
+          </p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

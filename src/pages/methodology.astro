@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { SITE } from '../config';
+import { breadcrumbSchema } from '../lib/schema';
+
+const title = `Methodology, How we rate platforms | ${SITE.name}`;
+const description = `Exactly how we evaluate legal sweepstakes casino alternatives: legal model, per-state availability, risk level, and verification. No hidden scores, no pay-to-rank.`;
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Methodology', path: '/methodology' }];
+---
+<Base title={title} description={description} schema={[breadcrumbSchema(crumbs)]} canonical="/methodology">
+  <Breadcrumbs crumbs={crumbs} />
+  <article class="container-x py-10">
+    <div class="prose-content mx-auto max-w-prose">
+      <p class="mono-meta uppercase tracking-widest text-accent">Methodology</p>
+      <h1 class="mt-3 font-head text-h1 text-ink">How we rate platforms</h1>
+      <p class="mt-6">
+        Our ratings are built on four things we can actually verify, not vibes, not a secret score,
+        and not how much a platform pays us. Here's the whole system.
+      </p>
+
+      <h2>1. Legal model</h2>
+      <p>
+        We start by identifying exactly how a platform stays legal. Is it
+        <a href="/guides/parimutuel-explained">parimutuel</a>,
+        <a href="/guides/dfs-vs-casino">peer-to-peer DFS</a>,
+        <a href="/guides/single-currency-model">single-currency</a>, a
+        <a href="/guides/prediction-markets">prediction market</a>, or something else? A platform
+        that can't or won't explain its legal basis is a red flag, and we treat it as one.
+      </p>
+
+      <h2>2. Per-state availability</h2>
+      <p>
+        Legality is state-specific. We verify whether each platform operates in each banned state
+        rather than assuming that "available somewhere" means "available everywhere." A platform
+        legal in California may not serve New York, and we mark that explicitly.
+      </p>
+
+      <h2>3. Risk level</h2>
+      <p>
+        We assign each platform a risk level, Low, Medium, High, or Unknown, based on how
+        established and tested its legal model is. Decades-old models like parimutuel earn Low.
+        Newer models earn Medium. Strained structures earn High. When we can't confirm the model at
+        all, we say <strong>Unknown</strong> and decline to recommend it until we can.
+      </p>
+
+      <h2>4. Last verified</h2>
+      <p>
+        Every platform entry and review carries a "last verified" date. In a space where laws change
+        monthly and platforms enter and exit states without notice, <em>when</em> we checked is as
+        important as what we found. We aim to re-verify regularly and to reflect status changes
+        within 48 hours of learning about them.
+      </p>
+
+      <h2>What we deliberately don't do</h2>
+      <ul>
+        <li>We don't sell rankings. Affiliate relationships never change a platform's position or rating.</li>
+        <li>We don't invent review scores. If we don't have a documented basis for a number, we don't publish one.</li>
+        <li>We don't hide the negatives. Limitations, caps, and risks are stated plainly.</li>
+        <li>We don't fabricate testimonials or self-awarded "best of" badges.</li>
+      </ul>
+
+      <h2>Sources</h2>
+      <p>
+        Where possible, we link factual legal claims to primary sources, legislation text,
+        regulator statements, and operator announcements. If you spot something out of date,
+        email <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a> and we'll fix it.
+      </p>
+    </div>
+  </article>
+</Base>

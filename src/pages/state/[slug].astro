@@ -1,0 +1,169 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import PlatformCard from '../../components/PlatformCard.astro';
+import EmailCapture from '../../components/EmailCapture.astro';
+import AffiliateDisclosure from '../../components/AffiliateDisclosure.astro';
+import { STATES, TIER_META } from '../../data/states';
+import { PLATFORMS } from '../../data/platforms';
+import { SITE } from '../../config';
+import { faqSchema, breadcrumbSchema } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const mdxEntries = await getCollection('states');
+  const byState = new Map(mdxEntries.map((e) => [e.data.state, e]));
+  // Generate a page for every tracked (non-legal) state, enriched with MDX where present.
+  return STATES.map((state) => ({
+    params: { slug: state.slug },
+    props: { state, entry: byState.get(state.slug) ?? null },
+  }));
+}
+
+const { state, entry } = Astro.props;
+const meta = TIER_META[state.tier];
+const path = `/state/${state.slug}`;
+
+// Show platforms not explicitly unavailable in this state.
+const stateAvailable = PLATFORMS.filter((p) => p.availability[state.code] !== 'no');
+
+const title = `Sweepstakes Casino Alternatives in ${state.name}: What's Legal in 2026 | ${SITE.name}`;
+const description = `What replaced sweepstakes casinos in ${state.name}? See the legal alternatives still available after ${state.law ?? 'the ban'}, with risk ratings and availability.`;
+
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'States', path: '/state/california' },
+  { name: state.name, path },
+];
+
+const Content = entry ? (await render(entry)).Content : null;
+
+const defaultFaqs = [
+  {
+    q: `Are sweepstakes casinos still legal in ${state.name}?`,
+    a: `No. Dual-currency sweepstakes casinos are ${state.tier === 'atrisk' ? 'at imminent risk in' : 'no longer legal in'} ${state.name}${state.law ? ` following ${state.law}` : ''}${state.effective ? ` (${state.effective})` : ''}. The platforms in our directory use different legal models.`,
+  },
+  {
+    q: `What can I legally play in ${state.name} instead?`,
+    a: `It depends on the platform's legal model and how it operates in ${state.name}. The directory above shows the alternatives we currently track for your state, with risk levels and last-verified dates.`,
+  },
+  {
+    q: `Is this legal advice?`,
+    a: `No. This is an independent informational resource. Legal status changes quickly, always verify a platform's current status in ${state.name} before signing up.`,
+  },
+];
+const faqs = entry?.data.faqs?.length ? entry.data.faqs : defaultFaqs;
+const avoid = entry?.data.avoid ?? [];
+
+const schema = [faqSchema(faqs), breadcrumbSchema(crumbs)];
+const pillStates = [state.code, ...['CA', 'NY'].filter((c) => c !== state.code)].slice(0, 3);
+---
+<Base title={title} description={description} ogType="article" schema={schema} canonical={path}>
+  <Breadcrumbs crumbs={crumbs} />
+  <AffiliateDisclosure />
+
+  <div class="container-x py-10">
+    <div class="mx-auto max-w-prose">
+      <p class="mono-meta flex items-center gap-2 uppercase tracking-widest">
+        <span class="inline-block h-2.5 w-2.5 rounded-sm" style={`background:${meta.color}`}></span>
+        {meta.tooltip}
+      </p>
+      <h1 class="mt-3 text-h1">Sweepstakes Casino Alternatives in {state.name}: What's Legal in 2026</h1>
+
+      <!-- Ban summary -->
+      <div class="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-surface-border bg-surface-border sm:grid-cols-3">
+        <div class="bg-bg p-4">
+          <p class="mono-meta uppercase">Status</p>
+          <p class="mt-1 font-medium" style={`color:${meta.color}`}>{state.label}</p>
+        </div>
+        <div class="bg-bg p-4">
+          <p class="mono-meta uppercase">Law / mechanism</p>
+          <p class="mt-1 font-medium text-ink">{state.law ?? ', '}</p>
+        </div>
+        <div class="bg-bg p-4">
+          <p class="mono-meta uppercase">Effective</p>
+          <p class="mt-1 font-medium text-ink">{state.effective ?? ', '}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Available platforms -->
+    <section class="mt-12">
+      <h2 class="text-h2">What still works in {state.name}</h2>
+      <p class="mt-2 max-w-prose text-ink-muted">
+        {stateAvailable.length} {stateAvailable.length === 1 ? 'platform' : 'platforms'} we track are
+        not explicitly unavailable in {state.name}. Verify each one's current status before signing up.
+      </p>
+      {stateAvailable.length > 0 ? (
+        <div class="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2">
+          {stateAvailable.map((p) => <PlatformCard platform={p} pillStates={pillStates} />)}
+        </div>
+      ) : (
+        <p class="mt-6 card p-6 text-ink-muted">
+          No confirmed platforms for {state.name} yet. Leave your email below and we'll notify you
+          when something launches here.
+        </p>
+      )}
+    </section>
+
+    <!-- Editorial narrative -->
+    <div class="prose-content mx-auto mt-12 max-w-prose">
+      {Content ? (
+        <Content />
+      ) : (
+        <>
+          <h2>Why sweepstakes casinos got banned in {state.name}</h2>
+          <p>
+            {state.name} {state.tier === 'atrisk' ? 'is moving to restrict' : 'moved to end'}{' '}
+            dual-currency sweepstakes casinos{state.law ? ` through ${state.law}` : ''}
+            {state.effective ? ` (${state.effective})` : ''}. Regulators concluded the dual Gold
+            Coin / Sweeps Coin model functioned as unlicensed online gambling. For the full
+            national picture, see our guide on <a href="/guides/what-happened">what happened to sweepstakes casinos</a>.
+          </p>
+          <h2>What to look for in an alternative</h2>
+          <p>
+            Favor platforms whose legal model is well-established, <a href="/guides/parimutuel-explained">parimutuel gaming</a>{' '}
+            and <a href="/guides/dfs-vs-casino">peer-to-peer daily fantasy sports</a> have the firmest
+            footing. Treat <a href="/guides/single-currency-model">single-currency</a> and prediction-market
+            products as newer and verify them carefully. Always confirm current availability in {state.name}.
+          </p>
+        </>
+      )}
+    </div>
+
+    {avoid.length > 0 && (
+      <section class="prose-content mx-auto mt-8 max-w-prose">
+        <h2>Platforms to avoid in {state.name}</h2>
+        <ul>{avoid.map((a) => <li>{a}</li>)}</ul>
+      </section>
+    )}
+
+    <!-- State email capture -->
+    <div class="mx-auto mt-12 max-w-prose">
+      <EmailCapture
+        variant="panel"
+        headline={`Playing in ${state.name}? We'll notify you first.`}
+        subline="When something new launches here, you'll know."
+        source={`state:${state.slug}`}
+        state={state.code}
+      />
+    </div>
+
+    <!-- FAQ -->
+    <section class="mx-auto mt-12 max-w-prose">
+      <h2 class="text-h2">Frequently asked questions</h2>
+      <dl class="mt-6 divide-y divide-surface-border">
+        {faqs.map((f) => (
+          <div class="py-5">
+            <dt class="font-head text-lg font-medium text-ink">{f.q}</dt>
+            <dd class="mt-2 text-ink-muted">{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <p class="mx-auto mt-12 max-w-prose mono-meta border-t border-surface-border pt-6">
+      Last updated {entry?.data.lastUpdated ?? '2026-05-26'} · Informational only, not legal advice.
+    </p>
+  </div>
+</Base>

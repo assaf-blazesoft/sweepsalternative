@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { SITE } from '../config';
+import { breadcrumbSchema } from '../lib/schema';
+
+const title = `Affiliate Disclosure | ${SITE.name}`;
+const description = `How ${SITE.name} uses affiliate links, and our commitment that they never influence our ratings or what we list.`;
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Affiliate disclosure', path: '/affiliate-disclosure' }];
+---
+<Base title={title} description={description} schema={[breadcrumbSchema(crumbs)]} canonical="/affiliate-disclosure">
+  <Breadcrumbs crumbs={crumbs} />
+  <article class="container-x py-10">
+    <div class="prose-content mx-auto max-w-prose">
+      <p class="mono-meta uppercase tracking-widest text-accent">Disclosure</p>
+      <h1 class="mt-3 font-head text-h1 text-ink">Affiliate disclosure</h1>
+
+      <p class="mt-6">
+        <strong>This site contains affiliate links. We may earn a commission, at no additional cost
+        to you, if you sign up for a platform through one of our links.</strong>
+      </p>
+      <p>
+        This is how we keep {SITE.name} free to read, independent, and frequently updated. We want
+        to be completely transparent about it, in keeping with U.S. Federal Trade Commission (FTC)
+        guidelines.
+      </p>
+
+      <h2>What an affiliate link is</h2>
+      <p>
+        When a platform runs an affiliate or referral program, we may use a tracked link so the
+        platform knows a visitor came from us. If that visitor signs up (and, depending on the
+        program, deposits or plays), we may receive a commission. Links to platforms with an
+        affiliate relationship are marked with an "affiliate" tag and carry a
+        <code>rel="nofollow sponsored"</code> attribute.
+      </p>
+
+      <h2>What it does not change</h2>
+      <ul>
+        <li>It does not change our ratings or risk levels.</li>
+        <li>It does not change which platforms we list or how we order them.</li>
+        <li>It does not stop us from publishing negatives, caps, or risks about a platform.</li>
+        <li>It does not cost you anything.</li>
+      </ul>
+
+      <h2>Platforms without an affiliate relationship</h2>
+      <p>
+        We list platforms regardless of whether they have an affiliate program. Where there's no
+        program (or we haven't established one), we still link out, using a plain referral link
+        with tracking parameters, because the goal is to help you find legal options, not only the
+        ones that pay us.
+      </p>
+
+      <h2>Questions</h2>
+      <p>
+        If anything here is unclear, email <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>.
+        You can also read how our ratings work on our <a href="/methodology">methodology</a> page.
+      </p>
+    </div>
+  </article>
+</Base>

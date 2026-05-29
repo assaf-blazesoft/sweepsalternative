@@ -1,0 +1,23 @@
+---
+// FTC-compliant persistent disclosure. Render above the fold on any page
+// with outbound affiliate links (PRD §12).
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+---
+<aside
+  class:list={[
+    'border-y border-surface-border bg-white/[0.02] text-ink-muted',
+    compact ? 'text-meta' : 'text-meta',
+  ]}
+  aria-label="Affiliate disclosure"
+>
+  <div class="container-x py-2.5">
+    <p>
+      <span class="font-mono uppercase tracking-wide text-accent/80">Disclosure</span>
+      &nbsp;This site contains affiliate links. We may earn a commission at no cost to you if
+      you sign up through our links. It never changes our ratings, <a href="/methodology" class="underline hover:text-ink">see our methodology</a>.
+    </p>
+  </div>
+</aside>

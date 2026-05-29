@@ -1,0 +1,87 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { PLATFORM_BY_SLUG } from '../../data/platforms';
+import { SITE } from '../../config';
+import { articleSchema, faqSchema, breadcrumbSchema } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('guides');
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const path = `/guides/${entry.id}`;
+const title = `${entry.data.title} | ${SITE.name}`;
+
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Guides', path: '/guides/what-happened' },
+  { name: entry.data.title, path },
+];
+
+const related = entry.data.related.map((slug) => PLATFORM_BY_SLUG[slug]).filter(Boolean);
+
+const schema = [
+  articleSchema({
+    headline: entry.data.title,
+    description: entry.data.description,
+    path,
+    datePublished: entry.data.datePublished,
+    dateModified: entry.data.lastUpdated,
+  }),
+  faqSchema(entry.data.faqs),
+  breadcrumbSchema(crumbs),
+];
+---
+<Base title={title} description={entry.data.description} ogType="article" schema={schema} canonical={path}>
+  <Breadcrumbs crumbs={crumbs} />
+  <article class="container-x py-10">
+    <div class="mx-auto max-w-prose">
+      <p class="mono-meta uppercase tracking-widest text-accent">Guide</p>
+      <h1 class="mt-3 text-h1">{entry.data.title}</h1>
+      <p class="mt-4 text-body text-ink-muted">{entry.data.description}</p>
+      <p class="mt-4 mono-meta">
+        By {SITE.author} · Published {entry.data.datePublished} · Updated {entry.data.lastUpdated}
+      </p>
+
+      <div class="prose-content mt-10">
+        <Content />
+      </div>
+
+      {related.length > 0 && (
+        <section class="mt-12">
+          <h2 class="font-head text-h3 text-ink">Relevant platforms</h2>
+          <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {related.map((r) => (
+              <a href={`/review/${r.slug}`} class="card card-hover flex items-center gap-3 p-4">
+                <span class="flex h-9 w-9 items-center justify-center rounded-lg border border-surface-border bg-white/5 font-head text-xs font-bold">{r.initials}</span>
+                <span class="font-medium text-ink">{r.name}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {entry.data.faqs.length > 0 && (
+        <section class="mt-12">
+          <h2 class="font-head text-h2 text-ink">Frequently asked questions</h2>
+          <dl class="mt-6 divide-y divide-surface-border">
+            {entry.data.faqs.map((f) => (
+              <div class="py-5">
+                <dt class="font-head text-lg font-medium text-ink">{f.q}</dt>
+                <dd class="mt-2 text-ink-muted">{f.a}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
+
+      <p class="mt-12 mono-meta border-t border-surface-border pt-6">
+        Last updated {entry.data.lastUpdated} · Informational only, not legal advice.
+      </p>
+    </div>
+  </article>
+</Base>
